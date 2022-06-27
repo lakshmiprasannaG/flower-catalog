@@ -4,7 +4,8 @@ const contentTypes = {
   'jpg': 'image/jpg',
   'html': 'text/html',
   'js': 'text/javascript',
-  'txt': 'text/plain'
+  'txt': 'text/plain',
+  'pdf': 'application/pdf'
 };
 
 const fileHandler = ({ uri }, response, filePath = './') => {

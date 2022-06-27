@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: auto 50px;
+}
+
+header {
+  margin: 30px auto;
+  text-align: center;
+}
+
+.abeliophyllum,
+.ageratum {
+  display: flex;
+  justify-content: space-around;
+}
+
+.content {
+  justify-items: center;
+}
+
+figure {
+  border: 1px solid black;
+}
+
+img {
+  width: 508;
+  height: 700;
+}
+
+p,
+a {
+  padding: 10px;
+  text-align: left;
+  font-size: 30px;
+}
