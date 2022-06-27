@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 1060px;
+  margin: auto;
+}
+
+header {
+  margin: 30px auto;
+  text-align: center;
+}
+
+.flower-catalog {
+  display: flex;
+  justify-content: space-around;
+}
+
+.content {
+  justify-items: center;
+}
+
+.flowers {
+  width: 713px;
+  height: 556px;
+  border: 1px solid black;
+}
