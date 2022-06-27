@@ -1,6 +1,7 @@
 const { createServer } = require('net');
 const { Response } = require('./response.js');
 const { fileHandler } = require('./serveFileContents.js');
+const { commentHandler } = require('./commentHandler.js');
 const { notFoundHandler } = require('./notFoundHandler.js');
 const { parseRequest } = require('./parser.js');
 
@@ -16,9 +17,11 @@ const handle = (handlers, filePath) => {
 
 const onConnection = (socket, handler) => {
   socket.on('data', chunk => {
-    const request = parseRequest(chunk.toString());
+    socket.on('error', () => {
+      console.log('error');
+    });
 
-    console.log(request);
+    const request = parseRequest(chunk.toString());
 
     const response = new Response(socket);
     handler(request, response);
@@ -33,7 +36,7 @@ const startServer = (port, handler) => {
 };
 
 const main = (args) => {
-  const handlers = [fileHandler, notFoundHandler];
+  const handlers = [commentHandler, fileHandler, notFoundHandler];
   const port = 5555;
   startServer(port, handle(handlers, args));
 };

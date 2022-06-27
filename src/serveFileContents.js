@@ -8,9 +8,9 @@ const contentTypes = {
   'pdf': 'application/pdf'
 };
 
-const fileHandler = ({ uri }, response, filePath = './') => {
+const fileHandler = ({ uri }, response, filePath = './public') => {
   if (uri === '/') {
-    uri = '/index.html';
+    uri = '/flowerCatalog.html';
   }
 
   const fileName = filePath + uri;
