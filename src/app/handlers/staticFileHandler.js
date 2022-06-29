@@ -3,27 +3,30 @@ const fs = require('fs');
 const contentTypes = {
   'jpg': 'image/jpg',
   'html': 'text/html',
+  'css': 'text/css',
   'js': 'text/javascript',
   'txt': 'text/plain',
-  'pdf': 'application/pdf'
+  'pdf': 'application/pdf',
+  'gif': 'image/gif'
 };
 
-const fileHandler = ({ uri }, response, filePath = './') => {
-  if (uri === '/') {
-    uri = '/flowerCatalog.html';
+const createFileHandler = (filePath = './public') => ({ url }, response) => {
+  if (url.pathname === '/') {
+    url.pathname = '/flower-catalog.html';
   }
 
-  const fileName = filePath + uri;
+  const fileName = filePath + url.pathname;
 
   if (!fs.existsSync(fileName)) {
     return false;
   }
 
   const fileExtension = fileName.slice(fileName.lastIndexOf('.') + 1);
+
   response.setHeader('content-type', contentTypes[fileExtension]);
   const content = fs.readFileSync(fileName);
-  response.send(content);
+  response.end(content);
   return true;
 };
 
-module.exports = { fileHandler };
+module.exports = { createFileHandler };

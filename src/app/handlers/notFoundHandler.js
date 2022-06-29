@@ -1,6 +1,6 @@
 const notFoundHandler = (request, response) => {
   response.statusCode = 404;
-  response.send('Not available');
+  response.end('Not available');
   return true;
 };
 exports.notFoundHandler = notFoundHandler;

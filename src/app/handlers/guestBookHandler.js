@@ -18,24 +18,35 @@ const writeCommentsToGuestBook = () => {
   });
 
   const guestBook = guestBookTemplate.replace('___COMMENT___', comments.join('<br>'));
-  fs.writeFileSync('./public/guestBook.html', guestBook, 'utf8');
+  fs.writeFileSync('./public/guest-book.html', guestBook, 'utf8');
 };
 
-const commentHandler = (request, response) => {
-  const { uri, queryParams } = request;
-  if (uri === '/comment') {
-    queryParams.date = new Date().toLocaleString();
+const getQueryParams = searchParams => {
+  const queryParams = {};
+  for (const [key, value] of searchParams.entries()) {
+    queryParams[key] = value;
+  }
+  queryParams.date = new Date().toLocaleString();
+  return queryParams;
+};
+
+const guestBookHandler = (request, response) => {
+  const { url } = request;
+
+  if (url.pathname === '/comment') {
+    const queryParams = getQueryParams(url.searchParams);
+
     addComment(queryParams);
 
     writeCommentsToGuestBook();
 
     response.statusCode = 302;
-    response.setHeader('Location', '/guestBook.html');
-    response.send('done');
+    response.setHeader('Location', '/guest-book.html');
+    response.end('done');
 
     return true;
   }
   return false;
 };
 
-module.exports = { commentHandler };
+module.exports = { guestBookHandler };
