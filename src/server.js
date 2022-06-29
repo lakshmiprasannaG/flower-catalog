@@ -1,7 +1,7 @@
 const { createServer } = require('net');
 const { Response } = require('./response.js');
 const { fileHandler } = require('./serveFileContents.js');
-const { commentHandler } = require('./commentHandler.js');
+const { commentHandler } = require('./guestBookHandler.js');
 const { notFoundHandler } = require('./notFoundHandler.js');
 const { parseRequest } = require('./parser.js');
 
