@@ -1,24 +1,15 @@
 const fs = require('fs');
 
-const allComments = () => JSON.parse(fs.readFileSync('./private/comments.json', 'utf8'));
-
-const addComment = (newComment) => {
-  const comments = allComments();
-  comments.unshift(newComment);
-  fs.writeFileSync('./private/comments.json', JSON.stringify(comments), 'utf8');
-};
-
-const writeCommentsToGuestBook = () => {
+const createGuestBookPage = (guestBook) => {
   const guestBookTemplate = fs.readFileSync('./private/guestBookTemplate.html', 'utf8');
 
   const comments = [];
 
-  allComments().forEach(({ name, date, comment }) => {
+  guestBook.guests.forEach(({ date, name, comment }) => {
     comments.push(`${date} ${name} : ${comment}`);
   });
 
-  const guestBook = guestBookTemplate.replace('___COMMENT___', comments.join('<br>'));
-  fs.writeFileSync('./public/guest-book.html', guestBook, 'utf8');
+  return guestBookTemplate.replace('___COMMENT___', comments.join('<br>'));
 };
 
 const getQueryParams = searchParams => {
@@ -30,23 +21,28 @@ const getQueryParams = searchParams => {
   return queryParams;
 };
 
-const guestBookHandler = (request, response) => {
+const createGuestBookHandler = (guestBook) => (request, response) => {
   const { url } = request;
 
-  if (url.pathname === '/comment') {
+  if (url.pathname === '/add-guest') {
     const queryParams = getQueryParams(url.searchParams);
 
-    addComment(queryParams);
-
-    writeCommentsToGuestBook();
+    guestBook.addGuest(queryParams);
 
     response.statusCode = 302;
-    response.setHeader('Location', '/guest-book.html');
+    response.setHeader('Location', '/guest-book');
     response.end('done');
+
+    return true;
+  }
+
+  if (url.pathname === '/guest-book') {
+    response.write(createGuestBookPage(guestBook));
+    response.end('');
 
     return true;
   }
   return false;
 };
 
-module.exports = { guestBookHandler };
+module.exports = { createGuestBookHandler };

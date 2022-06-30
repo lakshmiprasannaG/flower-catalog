@@ -10,7 +10,8 @@ const contentTypes = {
   'gif': 'image/gif'
 };
 
-const createFileHandler = (filePath = './public') => ({ url }, response) => {
+const createFileHandler = (filePath = './public') => (request, response) => {
+  const { url } = request;
   if (url.pathname === '/') {
     url.pathname = '/flower-catalog.html';
   }

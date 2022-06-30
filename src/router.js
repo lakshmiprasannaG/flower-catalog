@@ -1,11 +1,12 @@
+const { logHandler } = require('./app/handlers/logHandler.js');
 const { createFileHandler } = require('./app/handlers/staticFileHandler.js');
-const { guestBookHandler } = require('./app/handlers/guestBookHandler.js');
+const { createGuestBookHandler } = require('./app/handlers/guestBookHandler.js');
 const { notFoundHandler } = require('./app/handlers/notFoundHandler.js');
 
-const handle = (handlers, filePath) => {
+const handle = (handlers) => {
   return (request, response) => {
     for (const handler of handlers) {
-      if (handler(request, response, filePath)) {
+      if (handler(request, response)) {
         return true;
       }
     }
@@ -13,9 +14,10 @@ const handle = (handlers, filePath) => {
   };
 };
 
-const app = (root) => {
+const router = (root, guestBook) => {
   const handlers = [
-    guestBookHandler,
+    logHandler,
+    createGuestBookHandler(guestBook),
     createFileHandler(root),
     notFoundHandler
   ];
@@ -23,4 +25,4 @@ const app = (root) => {
   return handle(handlers);
 };
 
-module.exports = { app };
+module.exports = { router };
