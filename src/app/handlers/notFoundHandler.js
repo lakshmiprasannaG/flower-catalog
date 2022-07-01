@@ -3,4 +3,5 @@ const notFoundHandler = (request, response) => {
   response.end('Not available');
   return true;
 };
-exports.notFoundHandler = notFoundHandler;
+
+module.exports = { notFoundHandler };

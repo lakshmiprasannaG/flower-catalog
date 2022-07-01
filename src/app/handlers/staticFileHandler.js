@@ -10,24 +10,25 @@ const contentTypes = {
   'gif': 'image/gif'
 };
 
-const createFileHandler = (filePath = './public') => (request, response) => {
+const createFileHandler = (filePath = './public') => (request, response, next) => {
   const { url } = request;
-  if (url.pathname === '/') {
+  if (url.pathname === '/' && request.method === 'GET') {
     url.pathname = '/flower-catalog.html';
   }
 
   const fileName = filePath + url.pathname;
 
   if (!fs.existsSync(fileName)) {
-    return false;
+    return next();
   }
 
   const fileExtension = fileName.slice(fileName.lastIndexOf('.') + 1);
 
   response.setHeader('content-type', contentTypes[fileExtension]);
-  const content = fs.readFileSync(fileName);
-  response.end(content);
-  return true;
+  fs.readFile(fileName, (err, data) => {
+    response.end(data);
+  });
+  return;
 };
 
 module.exports = { createFileHandler };

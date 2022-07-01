@@ -1,6 +1,8 @@
-const logHandler = (request, response) => {
-  console.log(request.url);
-  return false;
+const logHandler = (request, response, next) => {
+  request.date = new Date().toLocaleString();
+  console.log(request.date, request.url.href);
+  next();
+  return;
 };
 
 module.exports = { logHandler };
