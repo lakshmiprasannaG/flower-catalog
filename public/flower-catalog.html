@@ -3,6 +3,16 @@
 <head>
   <title></title>
   <link rel="stylesheet" href="css/flower-catalog.css" />
+  <script>
+    const disappear = function (event) {
+      const element = document.getElementById(event.target.id);
+      element.style.visibility = 'hidden';
+      setTimeout(() => {
+        element.style.visibility = 'visible';
+      }, 1000);
+    };
+
+  </script>
 </head>
 
 <body>
@@ -26,7 +36,9 @@
           <a href="ageratum.html">Ageratum</a>
         </li>
       </ul>
-      <img src="images/animated-flower-image-0021.gif" alt="gif" class="jar">
+      <img id="img" style="visibility: visible;" src="images/animated-flower-image-0021.gif" alt="gif" class="jar"
+        onclick="disappear(event)">
+
       <a href="guest-book">Guest book</a>
     </div>
   </div>

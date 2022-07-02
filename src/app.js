@@ -7,15 +7,15 @@ const { createFileHandler } = require('./app/handlers/staticFileHandler.js');
 const { notFoundHandler } = require('./app/handlers/notFoundHandler.js');
 const { GuestBook } = require('./app/guestBook.js');
 
-const guestBook = new GuestBook('./private/comments.json');
-guestBook.initialize();
+const app = (staticSrcPath, guestBookSrcPath) => {
+  const guestBook = new GuestBook(guestBookSrcPath);
+  guestBook.initialize();
 
-const app = (root) => {
   const handlers = [
     logHandler,
     bodyParser,
     createGuestBookHandler(guestBook),
-    createFileHandler(root),
+    createFileHandler(staticSrcPath),
     notFoundHandler
   ];
 
