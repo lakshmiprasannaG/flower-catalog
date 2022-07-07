@@ -1,11 +1,17 @@
 const { router } = require('./app/router.js');
 
-const { bodyParser } = require('./app/handlers/bodyParser.js');
+const { bodyParser, searchParamsParser } = require('./app/handlers/paramParser.js');
 const { logHandler } = require('./app/handlers/logHandler.js');
+const { protectedHandler, injectSession } = require('./app/handlers/cookieApp.js');
+const { loginHandler } = require('./app/handlers/loginHandler.js');
 const { createGuestBookHandler } = require('./app/handlers/guestBookHandler.js');
 const { createFileHandler } = require('./app/handlers/staticFileHandler.js');
 const { notFoundHandler } = require('./app/handlers/notFoundHandler.js');
 const { GuestBook } = require('./app/guestBook.js');
+const { injectCookies } = require('./app/handlers/injectCookie.js');
+const { logout } = require('./app/handlers/logout.js');
+
+const sessions = {};
 
 const app = (staticSrcPath, guestBookSrcPath) => {
   const guestBook = new GuestBook(guestBookSrcPath);
@@ -14,8 +20,13 @@ const app = (staticSrcPath, guestBookSrcPath) => {
   const handlers = [
     logHandler,
     bodyParser,
-    createGuestBookHandler(guestBook),
+    searchParamsParser,
+    injectCookies,
+    injectSession(sessions),
+    loginHandler(sessions),
     createFileHandler(staticSrcPath),
+    createGuestBookHandler(guestBook),
+    logout,
     notFoundHandler
   ];
 
