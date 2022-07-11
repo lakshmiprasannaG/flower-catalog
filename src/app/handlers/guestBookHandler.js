@@ -3,26 +3,35 @@ const fs = require('fs');
 const addGuest = (guestBook) => (req, res, next) => {
   const session = req.sessions[req.cookies.sessionId];
   if (!session) {
-    alert('Please login before commenting');
     return;
   }
 
-  const parsedParams = req.bodyParams;
-  const newComment = { ...parsedParams, name: session.username, date: req.date };
+  const parsedParams = req.body;
+  const newComment = {
+    ...parsedParams,
+    name: session.username,
+    date: req.date
+  };
+
   guestBook.addGuest(newComment);
-  res.setHeader('content-type', 'application/json');
-  res.end(JSON.stringify(guestBook.guests));
+  res.end();
 };
 
 const createGuestBookHandler = (guestBook) => (req, res, next) => {
-  const { url } = req;
+  const { pathname } = req.url;
 
-  if (url.pathname === '/add-guest' && req.method === 'POST') {
+  if (pathname === '/add-guest' && req.method === 'POST') {
     addGuest(guestBook)(req, res, next);
     return;
   }
 
-  if (url.pathname === '/guest-book' && req.method === 'GET') {
+  if (pathname === '/api/comments' && req.method === 'GET') {
+    res.setHeader('content-type', 'application/json');
+    res.end(JSON.stringify(guestBook.guests));
+    return;
+  }
+
+  if (pathname === '/guest-book' && req.method === 'GET') {
     createGuestBook(guestBook)(req, res, next);
     return;
   }
@@ -30,18 +39,14 @@ const createGuestBookHandler = (guestBook) => (req, res, next) => {
 };
 
 const createGuestBook = (guestBook) => (req, res, next) => {
-
   const template = fs.readFileSync('./private/guestBookTemplate.html', 'utf8');
+  const comments = convertToHtml(guestBook.guests);
+  res.end(template.replace('___COMMENT___', comments));
+};
 
+const convertToHtml = (rawComments) => {
   const comments = [];
-  comments.push(`
-  <th>
-  <th> date </th>
-  <th> name </th>
-  <th> comment </th>
-  </th>`
-  );
-  guestBook.guests.forEach(({ date, name, comment }) => {
+  rawComments.forEach(({ date, name, comment }) => {
     comments.push(`
     <tr>
     <td> ${date} </td>
@@ -50,8 +55,7 @@ const createGuestBook = (guestBook) => (req, res, next) => {
     </tr>`
     )
   });
-  res.end(template.replace('___COMMENT___', comments.join('')));
-  return;
+  return comments.join('');
 };
 
 module.exports = { createGuestBookHandler };

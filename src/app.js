@@ -36,7 +36,7 @@ const app = (staticSrcPath, guestBookSrcPath) => {
 const dataHandler = (req, res, next) => {
   console.log('in data handler');
   if (req.url.pathname === '/data') {
-    const params = req.bodyParams;
+    const params = req.rawBody;
     res.end(JSON.stringify(params));
     return;
   }

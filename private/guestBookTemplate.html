@@ -18,7 +18,7 @@
         <input type="submit" value="logout">
       </form>
     </header>
-    <form id="submit">
+    <form id="comment-form">
       <h2>Leave a comment</h2> <br>
       <div>
         <label for="comment">Comment:</label>
@@ -29,7 +29,16 @@
     <br>
     <hr>
     <table id="comments">
-      ___COMMENT___
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th>Comment</th>
+        </tr>
+      </thead>
+      <tbody id="commentList">
+        ___COMMENT___
+      </tbody>
     </table>
   </div>
 

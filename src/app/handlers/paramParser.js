@@ -15,8 +15,8 @@ const bodyParser = (req, res, next) => {
   });
 
   req.on('end', () => {
-    req.body = content;
-    req.bodyParams = parseParams(content);
+    req.rawBody = content;
+    req.body = parseParams(content);
     next();
   });
   return;

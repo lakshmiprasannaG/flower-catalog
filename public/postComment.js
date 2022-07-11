@@ -1,13 +1,5 @@
-const createGuestBook = (comments) => {
+const writeComments = (comments) => {
   const commentList = [];
-  commentList.push(`
-  <th>
-  <th> date </th>
-  <th> name </th>
-  <th> comment </th>
-  </th>`
-  );
-
   comments.forEach(({ date, name, comment }) => {
     commentList.push(`
     <tr>
@@ -20,23 +12,30 @@ const createGuestBook = (comments) => {
   return commentList.join('');
 };
 
-const xhrRequest = (method, action, body, onLoad) => {
+const xhrRequest = (action, { method, body }, onLoad) => {
   const xhr = new XMLHttpRequest();
   xhr.onload = () => onLoad(xhr);
   xhr.open(method, action);
-  xhr.send(body.toString());
+  // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+  xhr.send(body);
+};
+
+const displayGuestBook = (xhr) => {
+  if (xhr.status === 200) {
+    xhrRequest('/api/comments', { method: 'GET' }, (xhr) => {
+      const commentList = writeComments(JSON.parse(xhr.response));
+      const commentsElement = document.querySelector('#commentList');
+      commentsElement.innerHTML = commentList;
+    });
+  }
 };
 
 const guestBook = () => {
-  const formElement = document.querySelector('#submit');
+  const formElement = document.querySelector('#comment-form');
   const formData = new FormData(formElement);
   const body = new URLSearchParams(formData).toString();
 
-  xhrRequest('POST', '/add-guest', body, (xhr) => {
-    if (xhr.status === 200) {
-      const commentList = createGuestBook(JSON.parse(xhr.response));
-      const commentsElement = document.querySelector('#comments');
-      commentsElement.innerHTML = commentList;
-    }
+  xhrRequest('/add-guest', { method: 'POST', body }, (xhr) => {
+    displayGuestBook(xhr);
   });
 };

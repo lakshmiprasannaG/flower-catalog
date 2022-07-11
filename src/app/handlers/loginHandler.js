@@ -8,7 +8,7 @@ const loginHandler = (sessions) => (req, res, next) => {
     return;
   }
 
-  const currentUsername = req.bodyParams.username;
+  const currentUsername = req.body.username;
 
   const currentSession = sessions[req.cookies.sessionId];
   if (currentSession) {
