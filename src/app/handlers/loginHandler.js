@@ -1,7 +1,7 @@
 const { createSession } = require('./cookieApp.js');
 
 const loginHandler = (sessions) => (req, res, next) => {
-  console.log(sessions);
+  console.log('sessions: ', sessions);
   const pathname = req.url.pathname;
   if (pathname !== '/login' && pathname !== '/do-login') {
     next();

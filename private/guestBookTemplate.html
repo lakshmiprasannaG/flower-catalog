@@ -3,41 +3,35 @@
 <head>
   <title>Guest Book</title>
   <link rel="stylesheet" href="css/guest-book.css">
+  <script src="postComment.js"></script>
 </head>
 
 <body>
-  <header>
-    <h1>
-      <a href="flower-catalog.html">
-        << </a>
-          Guest Book
-    </h1>
-    <form action="/logout" method="post">
-      <!-- <a href="flower-catalog.html">
-        <button style="float: right;">logout</button>
-      </a> -->
-      <input type="submit" value="logout">
+  <div id="guest-book">
+    <header>
+      <h1>
+        <a href="flower-catalog.html">
+          << </a>
+            Guest Book
+      </h1>
+      <form action="/logout" method="post">
+        <input type="submit" value="logout">
+      </form>
+    </header>
+    <form id="submit">
+      <h2>Leave a comment</h2> <br>
+      <div>
+        <label for="comment">Comment:</label>
+        <textarea name="comment" cols="30" rows="5"></textarea>
+      </div>
+      <input type="button" value="Submit" onclick="guestBook()">
     </form>
-  </header>
-
-  <form action="/add-guest" method="post">
-    <h2>Leave a comment</h2> <br>
-
-    <div>
-      <label for="comment">Comment:</label>
-      <textarea name="comment" cols="30" rows="5"></textarea>
-    </div>
-
-    <input type="submit" value="Submit">
-
-  </form>
-
-  <br>
-  <hr>
-
-  <p>
-    ___COMMENT___
-  </p>
+    <br>
+    <hr>
+    <table id="comments">
+      ___COMMENT___
+    </table>
+  </div>
 
 </body>
 

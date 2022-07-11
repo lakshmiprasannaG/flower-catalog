@@ -1,42 +1,17 @@
 const fs = require('fs');
 
-// const parseParams = searchParams => {
-//   const queryParams = {};
-//   for (const [key, value] of searchParams.entries()) {
-//     queryParams[key] = value;
-//   }
-//   return queryParams;
-// };
-
-const createGuestBookPage = (guestBook) => {
-  const template = fs.readFileSync('./private/guestBookTemplate.html', 'utf8');
-
-  const comments = [];
-  guestBook.guests.forEach(({ date, name, comment }) => {
-    comments.push(`${date} ${name} : ${comment}`);
-  });
-
-  return template.replace('___COMMENT___', comments.join('<br>'));
-};
-
 const addGuest = (guestBook) => (req, res, next) => {
   const session = req.sessions[req.cookies.sessionId];
   if (!session) {
-    res.statusCode = '302';
-    res.setHeader('Location', '/do-login');
-    res.end('Please login');
+    alert('Please login before commenting');
     return;
   }
 
   const parsedParams = req.bodyParams;
-  guestBook.addGuest(
-    { ...parsedParams, name: session.username, date: req.date }
-  );
-
-  res.statusCode = 302;
-  res.setHeader('Location', '/guest-book');
-  res.end('done');
-  return;
+  const newComment = { ...parsedParams, name: session.username, date: req.date };
+  guestBook.addGuest(newComment);
+  res.setHeader('content-type', 'application/json');
+  res.end(JSON.stringify(guestBook.guests));
 };
 
 const createGuestBookHandler = (guestBook) => (req, res, next) => {
@@ -55,9 +30,28 @@ const createGuestBookHandler = (guestBook) => (req, res, next) => {
 };
 
 const createGuestBook = (guestBook) => (req, res, next) => {
-  res.write(createGuestBookPage(guestBook));
-  res.end();
+
+  const template = fs.readFileSync('./private/guestBookTemplate.html', 'utf8');
+
+  const comments = [];
+  comments.push(`
+  <th>
+  <th> date </th>
+  <th> name </th>
+  <th> comment </th>
+  </th>`
+  );
+  guestBook.guests.forEach(({ date, name, comment }) => {
+    comments.push(`
+    <tr>
+    <td> ${date} </td>
+    <td> ${name} </td>
+    <td> ${comment} </td>
+    </tr>`
+    )
+  });
+  res.end(template.replace('___COMMENT___', comments.join('')));
   return;
-}
+};
 
 module.exports = { createGuestBookHandler };
