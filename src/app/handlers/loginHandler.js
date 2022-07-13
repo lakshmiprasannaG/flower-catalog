@@ -1,21 +1,6 @@
 const { createSession } = require('./cookieApp.js');
 
-const loginHandler = (sessions) => (req, res, next) => {
-  const pathname = req.url.pathname;
-  if (pathname !== '/login' && pathname !== '/do-login') {
-    next();
-    return;
-  }
-
-  const currentUsername = req.body.username;
-
-  const currentSession = sessions[req.cookies.sessionId];
-  if (currentSession) {
-    return redirectToGuestBook(req, res, next);
-  }
-
-  if (req.url.pathname === '/do-login') {
-    res.end(`<html>
+const loginTemplate = () => `<html>
 
     <head>
       <title>LOGIN</title>
@@ -35,26 +20,45 @@ const loginHandler = (sessions) => (req, res, next) => {
     
     </body>
     
-    </html>`);
-    return;
-  }
-
-  if (!currentUsername) {
-    res.end('Please enter your username');
-    return;
-  }
-
-  const session = createSession(currentUsername);
-  sessions[session.sessionId] = session;
-
-  res.setHeader('set-cookie', `sessionId=${session.sessionId}`);
-  return redirectToGuestBook(req, res, next);
-};
+    </html>`;
 
 const redirectToGuestBook = (req, res, next) => {
   res.statusCode = '302';
   res.setHeader('Location', '/guest-book');
-  res.end();
+  res.end('welcome to guest book');
+};
+
+const loginHandler = (sessions) => (req, res, next) => {
+  const pathname = req.url.pathname;
+  if (pathname !== '/login' && pathname !== '/do-login') {
+    next();
+    return;
+  }
+
+  const currentUsername = req.body.username;
+
+  const currentSession = sessions[req.cookies.sessionId];
+  if (currentSession) {
+    return redirectToGuestBook(req, res, next);
+  }
+
+  if (req.url.pathname === '/do-login') {
+    res.setHeader('content-type', 'text/html');
+    res.end(loginTemplate());
+    return;
+  }
+
+  if (!currentUsername) {
+    res.statusCode = 400;
+    res.end('Please enter your username');
+    return;
+  }
+
+  const newSession = createSession(currentUsername, req.rawDate);
+  sessions[newSession.sessionId] = newSession; // session injection
+
+  res.setHeader('set-cookie', `sessionId=${newSession.sessionId}`);
+  return redirectToGuestBook(req, res, next);
 };
 
 module.exports = { loginHandler };

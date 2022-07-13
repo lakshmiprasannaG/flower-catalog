@@ -5,14 +5,13 @@ const injectSession = (sessions) => (req, res, next) => {
   next();
 };
 
-const createSession = (username) => {
-  const time = new Date();
-  const sessionId = time.getTime();
+const createSession = (username, date) => {
+  const sessionId = date.getTime();
 
   return {
     sessionId,
     username,
-    time: time.toLocaleString(),
+    time: date.toLocaleString(),
   };
 };
 

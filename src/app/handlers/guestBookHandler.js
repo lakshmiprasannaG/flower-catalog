@@ -18,7 +18,7 @@ const addGuest = (guestBook) => (req, res, next) => {
 };
 
 const createGuestBook = (guestBook) => (req, res, next) => {
-  const template = fs.readFileSync('./private/guestBookTemplate.html', 'utf8');
+  const template = fs.readFileSync('./templates/guestBookTemplate.html', 'utf8');
   const comments = convertToHtml(guestBook.guests);
   res.end(template.replace('___COMMENT___', comments));
 };

@@ -1,6 +1,6 @@
 const { router } = require('./app/router.js');
 
-const { bodyParser, searchParamsParser, parseUrl } = require('./app/handlers/paramParser.js');
+const { bodyParser, searchParamsParser, parseUrl } = require('./app/handlers/parser.js');
 const { logHandler } = require('./app/handlers/logHandler.js');
 const { injectSession } = require('./app/handlers/cookieApp.js');
 const { loginHandler } = require('./app/handlers/loginHandler.js');
@@ -10,16 +10,21 @@ const { notFoundHandler } = require('./app/handlers/notFoundHandler.js');
 const { GuestBook } = require('./app/guestBook.js');
 const { injectCookies } = require('./app/handlers/injectCookie.js');
 const { logout } = require('./app/handlers/logout.js');
+const { injectDate } = require('./app/handlers/injectDate.js');
 
 const sessions = {};
 
-const app = (staticSrcPath, guestBookSrcPath) => {
+const app = (config) => {
+  const guestBookSrcPath = config['FC_GUESTBOOK_SRC_PATH'];
+  const staticSrcPath = config['FC_STATIC_SRC_PATH'];
+
   const guestBook = new GuestBook(guestBookSrcPath);
   guestBook.initialize();
 
   const handlers = [
+    injectDate,
     parseUrl,
-    // logHandler(sessions),
+    // logHandler(console.log,sessions),
     bodyParser,
     searchParamsParser,
     injectCookies,
