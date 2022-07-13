@@ -10,7 +10,7 @@ const logout = (req, res, next) => {
 
   res.statusCode = '302';
   res.setHeader('Location', 'flower-catalog.html');
-  res.end();
+  res.end(JSON.stringify(req.sessions));
 };
 
 module.exports = { logout };

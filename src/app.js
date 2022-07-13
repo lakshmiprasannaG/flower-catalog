@@ -7,24 +7,15 @@ const { loginHandler } = require('./app/handlers/loginHandler.js');
 const { createGuestBookHandler } = require('./app/handlers/guestBookHandler.js');
 const { createFileHandler } = require('./app/handlers/staticFileHandler.js');
 const { notFoundHandler } = require('./app/handlers/notFoundHandler.js');
-const { GuestBook } = require('./app/guestBook.js');
 const { injectCookies } = require('./app/handlers/injectCookie.js');
 const { logout } = require('./app/handlers/logout.js');
 const { injectDate } = require('./app/handlers/injectDate.js');
 
-const sessions = {};
-
-const app = (config) => {
-  const guestBookSrcPath = config['FC_GUESTBOOK_SRC_PATH'];
-  const staticSrcPath = config['FC_STATIC_SRC_PATH'];
-
-  const guestBook = new GuestBook(guestBookSrcPath);
-  guestBook.initialize();
-
+const initializeApp = (staticSrcPath, { guestBook, sessions }) => {
   const handlers = [
     injectDate,
     parseUrl,
-    // logHandler(console.log,sessions),
+    // logHandler(console.log, sessions),
     bodyParser,
     searchParamsParser,
     injectCookies,
@@ -35,29 +26,25 @@ const app = (config) => {
     logout,
     notFoundHandler
   ];
-
   return router(handlers);
 };
 
-const dataHandler = (req, res, next) => {
-  if (req.url.pathname === '/data') {
-    const params = req.rawBody;
-    res.end(JSON.stringify(params));
-    return;
-  }
-  next();
-};
-
-const xhrApp = (staticSrcPath) => {
+const app = (config, { guestBook, sessions }) => {
   const handlers = [
+    injectDate,
+    parseUrl,
+    logHandler(console.log, sessions),
     bodyParser,
     searchParamsParser,
-    dataHandler,
-    createFileHandler(staticSrcPath),
+    injectCookies,
+    injectSession(sessions),
+    loginHandler(sessions),
+    createFileHandler(config['FC_STATIC_SRC_PATH']),
+    createGuestBookHandler(guestBook),
+    logout,
     notFoundHandler
   ];
-
   return router(handlers);
 };
 
-module.exports = { app, xhrApp };
+module.exports = { app, initializeApp };

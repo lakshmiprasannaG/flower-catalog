@@ -55,7 +55,7 @@ const createGuestBookHandler = (guestBook) => (req, res, next) => {
     if (!req.sessions[req.cookies.sessionId]) {
       res.statusCode = '302';
       res.setHeader('location', 'do-login');
-      res.end();
+      res.end('redirected to login page');
       return;
     }
     createGuestBook(guestBook)(req, res, next);

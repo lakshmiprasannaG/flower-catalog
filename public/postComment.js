@@ -35,7 +35,5 @@ const guestBook = () => {
   const formData = new FormData(formElement);
   const body = new URLSearchParams(formData).toString();
 
-  xhrRequest('/add-guest', { method: 'POST', body }, (xhr) => {
-    displayGuestBook(xhr);
-  });
+  xhrRequest('/add-guest', { method: 'POST', body }, displayGuestBook);
 };
