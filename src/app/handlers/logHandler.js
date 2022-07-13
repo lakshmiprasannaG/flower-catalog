@@ -1,7 +1,7 @@
 const logHandler = (logger, sessions) => (request, response, next) => {
-  logger('sessions:', sessions);
+  logger(sessions);
   logger(request.method);
-  logger(request.date, request.url);
+  logger(request.date, request.url.href);
   next();
   return;
 };

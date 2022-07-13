@@ -1,15 +1,18 @@
 const injectSession = (sessions) => (req, res, next) => {
   if (req.cookies) {
     req.sessions = sessions;
+
+    const sessionId = req.cookies.sessionId;
+    if (sessionId) {
+      req.session = sessions[sessionId];
+    }
   }
   next();
 };
 
 const createSession = (username, date) => {
-  const sessionId = date.getTime();
-
   return {
-    sessionId,
+    sessionId: date.getTime(),
     username,
     time: date.toLocaleString(),
   };

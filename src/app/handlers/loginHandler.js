@@ -1,4 +1,4 @@
-const { createSession } = require('./cookieApp.js');
+const { createSession } = require('./sessionLib.js');
 
 const loginTemplate = () => `<html>
 
@@ -28,7 +28,7 @@ const redirectToGuestBook = (req, res, next) => {
   res.end('welcome to guest book');
 };
 
-const loginHandler = (sessions) => (req, res, next) => {
+const loginHandler = (req, res, next) => {
   const pathname = req.url.pathname;
   if (pathname !== '/login' && pathname !== '/do-login') {
     next();
@@ -37,8 +37,7 @@ const loginHandler = (sessions) => (req, res, next) => {
 
   const currentUsername = req.body.username;
 
-  const currentSession = sessions[req.cookies.sessionId];
-  if (currentSession) {
+  if (req.session) {
     return redirectToGuestBook(req, res, next);
   }
 
@@ -55,7 +54,7 @@ const loginHandler = (sessions) => (req, res, next) => {
   }
 
   const newSession = createSession(currentUsername, req.rawDate);
-  sessions[newSession.sessionId] = newSession; // session injection
+  req.sessions[newSession.sessionId] = newSession; // injecting session to sessions
 
   res.setHeader('set-cookie', `sessionId=${newSession.sessionId}`);
   return redirectToGuestBook(req, res, next);

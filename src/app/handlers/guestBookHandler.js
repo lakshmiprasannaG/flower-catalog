@@ -1,25 +1,24 @@
 const fs = require('fs');
 
-const addGuest = (guestBook) => (req, res, next) => {
-  const session = req.sessions[req.cookies.sessionId];
-  if (!session) {
+const addGuest = (req, res, next) => {
+  if (!req.session) {
     return;
   }
 
   const parsedParams = req.body;
   const newComment = {
     ...parsedParams,
-    name: session.username,
+    name: req.session.username,
     date: req.date
   };
 
-  guestBook.addGuest(newComment);
+  req.guestBook.addGuest(newComment);
   res.end();
 };
 
-const createGuestBook = (guestBook) => (req, res, next) => {
+const createGuestBook = (req, res, next) => {
   const template = fs.readFileSync('./templates/guestBookTemplate.html', 'utf8');
-  const comments = convertToHtml(guestBook.guests);
+  const comments = convertToHtml(req.guestBook.guests);
   res.end(template.replace('___COMMENT___', comments));
 };
 
@@ -37,31 +36,31 @@ const convertToHtml = (rawComments) => {
   return comments.join('');
 };
 
-const createGuestBookHandler = (guestBook) => (req, res, next) => {
+const guestBookHandler = (req, res, next) => {
   const { pathname } = req.url;
 
   if (pathname === '/add-guest' && req.method === 'POST') {
-    addGuest(guestBook)(req, res, next);
+    addGuest(req, res, next);
     return;
   }
 
   if (pathname === '/api/comments' && req.method === 'GET') {
     res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify(guestBook.guests));
+    res.end(JSON.stringify(req.guestBook.guests));
     return;
   }
 
   if (pathname === '/guest-book' && req.method === 'GET') {
-    if (!req.sessions[req.cookies.sessionId]) {
+    if (!req.session) {
       res.statusCode = '302';
       res.setHeader('location', 'do-login');
       res.end('redirected to login page');
       return;
     }
-    createGuestBook(guestBook)(req, res, next);
+    createGuestBook(req, res, next);
     return;
   }
   return next();
 };
 
-module.exports = { createGuestBookHandler };
+module.exports = { guestBookHandler };
