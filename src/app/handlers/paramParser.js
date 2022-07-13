@@ -27,4 +27,9 @@ const searchParamsParser = (req, res, next) => {
   next();
 };
 
-module.exports = { bodyParser, searchParamsParser };
+const parseUrl = (req, res, next) => {
+  req.url = new URL(req.url, 'http://' + req.headers.host);
+  next();
+};
+
+module.exports = { bodyParser, searchParamsParser, parseUrl };

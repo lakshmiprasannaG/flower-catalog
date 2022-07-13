@@ -1,6 +1,6 @@
 const { router } = require('./app/router.js');
 
-const { bodyParser, searchParamsParser } = require('./app/handlers/paramParser.js');
+const { bodyParser, searchParamsParser, parseUrl } = require('./app/handlers/paramParser.js');
 const { logHandler } = require('./app/handlers/logHandler.js');
 const { injectSession } = require('./app/handlers/cookieApp.js');
 const { loginHandler } = require('./app/handlers/loginHandler.js');
@@ -18,7 +18,8 @@ const app = (staticSrcPath, guestBookSrcPath) => {
   guestBook.initialize();
 
   const handlers = [
-    logHandler,
+    parseUrl,
+    // logHandler(sessions),
     bodyParser,
     searchParamsParser,
     injectCookies,
@@ -34,7 +35,6 @@ const app = (staticSrcPath, guestBookSrcPath) => {
 };
 
 const dataHandler = (req, res, next) => {
-  console.log('in data handler');
   if (req.url.pathname === '/data') {
     const params = req.rawBody;
     res.end(JSON.stringify(params));
