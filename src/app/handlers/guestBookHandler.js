@@ -6,6 +6,7 @@ const addGuest = (req, res, next) => {
   }
 
   const parsedParams = req.body;
+
   const newComment = {
     ...parsedParams,
     name: req.session.username,
@@ -52,9 +53,7 @@ const guestBookHandler = (req, res, next) => {
 
   if (pathname === '/guest-book' && req.method === 'GET') {
     if (!req.session) {
-      res.statusCode = '302';
-      res.setHeader('location', 'do-login');
-      res.end('redirected to login page');
+      res.redirect('/do-login');
       return;
     }
     createGuestBook(req, res, next);
@@ -63,4 +62,4 @@ const guestBookHandler = (req, res, next) => {
   return next();
 };
 
-module.exports = { guestBookHandler };
+module.exports = { guestBookHandler, addGuest, createGuestBook };

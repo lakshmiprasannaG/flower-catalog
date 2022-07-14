@@ -1,16 +1,9 @@
 const logout = (req, res, next) => {
-  if (req.url.pathname !== '/logout') {
-    next();
-    return;
-  }
-
   const sessionId = req.cookies.sessionId;
-  res.setHeader('set-cookie', `sessionId=${sessionId}; Max-Age=0`);
+  res.clearCookie({ sessionID: sessionId });
   delete req.sessions[sessionId];
 
-  res.statusCode = '302';
-  res.setHeader('Location', 'flower-catalog.html');
-  res.end(JSON.stringify(req.sessions));
+  res.redirect('/');
 };
 
 module.exports = { logout };

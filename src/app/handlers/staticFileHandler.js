@@ -13,7 +13,7 @@ const contentTypes = {
 const createFileHandler = (filePath = './public') => (request, response, next) => {
   let { pathname } = request.url;
   if (pathname === '/' && request.method === 'GET') {
-    pathname = '/flower-catalog.html';
+    pathname = '/index.html';
   }
 
   const fileName = filePath + pathname;
