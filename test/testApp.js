@@ -90,19 +90,19 @@ describe('app', () => {
     });
   });
 
-  describe('get /api/comments', () => {
+  describe('get /guest-book/api/comments', () => {
     it('should give comments', (done) => {
       request(startApp(config, { sessions }))
-        .get('/api/comments')
+        .get('/guest-book/api/comments')
         .expect('content-type', /json/)
         .expect(200, done)
     });
   });
 
-  describe('post /add-guest', () => {
+  describe('post /guest-book/add-guest', () => {
     it('should post the comment when session is available', (done) => {
       request(startApp(config, { sessions }))
-        .post('/add-guest')
+        .post('/guest-book/add-guest')
         .set('Cookie', 'sessionId=123')
         .send('comment=hey')
         .expect(200)

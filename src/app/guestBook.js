@@ -7,29 +7,29 @@ const writeToFile = (fileName, content) =>
   fs.writeFileSync(fileName, JSON.stringify(content), 'utf8');
 
 class GuestBook {
-  #guestBook
+  #comments
   #guestBookPath
 
   constructor(guestBookPath) {
     this.#guestBookPath = guestBookPath;
-    this.#guestBook = [];
+    this.#comments = [];
   }
 
   initialize() {
-    this.#guestBook = readFile(this.#guestBookPath);
+    this.#comments = readFile(this.#guestBookPath);
   }
 
-  #writeGuests() {
-    writeToFile(this.#guestBookPath, this.#guestBook);
+  #writeComments() {
+    writeToFile(this.#guestBookPath, this.#comments);
   }
 
   addGuest(guest) {
-    this.#guestBook.unshift(guest);
-    this.#writeGuests();
+    this.#comments.unshift(guest);
+    this.#writeComments();
   }
 
   get guests() {
-    return this.#guestBook;
+    return this.#comments;
   }
 }
 

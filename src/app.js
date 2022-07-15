@@ -2,26 +2,53 @@ const express = require('express');
 
 const { injectGuestBook, logRequest, comments, guestBookHandler, redirectLogin, injectSession, injectDate, logout } = require('./app/handlers/handlers.js');
 const { loginHandler } = require('./app/handlers/loginHandler.js');
+const { signupHandler } = require('./app/handlers/signupHandler.js');
 const { addGuest } = require('./app/handlers/guestsHandler.js');
 const { injectCookies } = require('./app/handlers/injectCookie.js');
+
+const createLoginRouter = () => {
+  const loginRouter = express.Router();
+  loginRouter.get('/', redirectLogin);
+  loginRouter.post('/', loginHandler);
+
+  return loginRouter;
+};
+
+const createGuestBookRouter = () => {
+  const guestBookRouter = express.Router();
+  guestBookRouter.post('/add-guest', addGuest);
+  guestBookRouter.get('/api/comments', (req, res, next) => {
+    comments(req, res, next);
+  });
+  guestBookRouter.get('/', guestBookHandler);
+
+  return guestBookRouter;
+}
 
 const startApp = (config, { sessions }) => {
   const { log, FC_GUESTBOOK_SRC_PATH } = config;
   const app = express();
 
-  app.use(injectDate);
-  app.use(logRequest(log));
-  app.use(express.urlencoded({ extended: true }));
-  app.use(injectGuestBook(FC_GUESTBOOK_SRC_PATH));
-  app.use(injectCookies);
-  app.use(injectSession(sessions));
-  app.get('/login', redirectLogin);
-  app.post('/login', loginHandler);
-  app.post('/add-guest', addGuest);
-  app.get('/api/comments', comments);
-  app.get('/guest-book', guestBookHandler);
+  const loginRouter = createLoginRouter();
+  const guestBookRouter = createGuestBookRouter();
+
+  const middleware = [
+    injectDate,
+    logRequest(log),
+    express.urlencoded({ extended: true }),
+    injectGuestBook(FC_GUESTBOOK_SRC_PATH),
+    injectCookies,
+    injectSession(sessions)
+  ];
+
+  app.use(middleware);
+  app.use('/login', loginRouter);
+  app.use('/guest-book', guestBookRouter);
+
   app.use(express.static('public'));
   app.post('/logout', logout)
+
+  app.post('/signup', signupHandler);
 
   return app;
 };
