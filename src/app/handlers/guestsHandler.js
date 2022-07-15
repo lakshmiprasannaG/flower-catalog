@@ -38,29 +38,4 @@ const convertToHtml = (rawComments) => {
   return comments.join('');
 };
 
-const guestBookHandler = (req, res, next) => {
-  const { pathname } = req.url;
-
-  if (pathname === '/add-guest' && req.method === 'POST') {
-    addGuest(req, res, next);
-    return;
-  }
-
-  if (pathname === '/api/comments' && req.method === 'GET') {
-    res.setHeader('content-type', 'application/json');
-    res.end(JSON.stringify(req.guestBook.guests));
-    return;
-  }
-
-  if (pathname === '/guest-book' && req.method === 'GET') {
-    if (!req.session) {
-      res.redirect('/login');
-      return;
-    }
-    createGuestBook(req, res, next);
-    return;
-  }
-  return next();
-};
-
-module.exports = { guestBookHandler, addGuest, createGuestBook };
+module.exports = { addGuest, createGuestBook };

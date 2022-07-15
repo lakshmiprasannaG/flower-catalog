@@ -1,4 +1,10 @@
-const { createSession } = require('./sessionLib.js');
+const createSession = (username, date) => {
+  return {
+    sessionId: date.getTime(),
+    username,
+    time: date.toLocaleString(),
+  };
+};
 
 const loginHandler = (req, res, next) => {
   if (req.session) {

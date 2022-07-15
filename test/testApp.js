@@ -4,9 +4,12 @@ const { startApp } = require('./../src/app.js');
 const request = require('supertest');
 const { GuestBook } = require('../src/app/guestBook.js');
 
+const log = (req, res, next) => next;
+
 const config = {
   FC_STATIC_SRC_PATH: './public',
-  FC_GUESTBOOK_SRC_PATH: './test/data/comments.json'
+  FC_GUESTBOOK_SRC_PATH: './test/data/comments.json',
+  log
 };
 
 const guestBook = new GuestBook(config['FC_GUESTBOOK_SRC_PATH']);
