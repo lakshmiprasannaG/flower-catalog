@@ -16,7 +16,6 @@ const xhrRequest = (action, { method, body }, onLoad) => {
   const xhr = new XMLHttpRequest();
   xhr.onload = () => onLoad(xhr);
   xhr.open(method, action);
-  // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
   xhr.send(body);
 };
 
@@ -33,7 +32,6 @@ const displayGuestBook = (xhr) => {
 const guestBook = () => {
   const formElement = document.querySelector('#comment-form');
   const formData = new FormData(formElement);
-  const body = new URLSearchParams(formData).toString();
-
+  const body = new URLSearchParams(formData);
   xhrRequest('/add-guest', { method: 'POST', body }, displayGuestBook);
 };

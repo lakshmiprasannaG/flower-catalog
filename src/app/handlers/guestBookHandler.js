@@ -4,6 +4,7 @@ const addGuest = (req, res, next) => {
   if (!req.session) {
     return;
   }
+  res.set({ 'content-type': 'text' });
 
   const parsedParams = req.body;
 
@@ -53,7 +54,7 @@ const guestBookHandler = (req, res, next) => {
 
   if (pathname === '/guest-book' && req.method === 'GET') {
     if (!req.session) {
-      res.redirect('/do-login');
+      res.redirect('/login');
       return;
     }
     createGuestBook(req, res, next);

@@ -5,11 +5,7 @@ const injectGuestBook = (guestBookSrcPath = './data/comments.json') => {
   guestBook.initialize();
 
   return (req, res, next) => {
-    // const { pathname } = req.url;
-    // paths = ['/guest-book', '/add-guest', '/api/comments'];
-    // if (paths.includes(pathname)) {
     req.guestBook = guestBook;
-    // }
     next();
   };
 };

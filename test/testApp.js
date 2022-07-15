@@ -21,30 +21,30 @@ const sessions = {
 
 describe('app', () => {
   describe('get /', () => {
-    it('should respond with status code 200 & "html" content-type', (done) => {
-      request(startApp({}, { sessions }))
+    it('should give index page', (done) => {
+      request(startApp(config, { sessions }))
         .get('/index.html')
         .expect('content-type', /html/)
         .expect(/<a href="abeliophyllum.html">/)
         .expect(/<a href="ageratum.html">/)
-        .expect(/<a href="do-login">Guest book/)
+        .expect(/<a href="login">Guest book/)
         .expect(200, done)
     });
 
   });
 
   describe('get /invalid', () => {
-    it('should return with status code 404 & "Not avaliable" message', (done) => {
-      request(startApp({}, { sessions }))
+    it('should return with 404', (done) => {
+      request(startApp(config, { sessions }))
         .get('/abc')
         .expect(404, done)
     });
   });
 
-  describe('get /do-login.html', () => {
-    it('should return with status code 200 and login template', (done) => {
-      request(startApp({}, { sessions }))
-        .get('/do-login.html')
+  describe('get /login', () => {
+    it('should give login page', (done) => {
+      request(startApp(config, { sessions }))
+        .get('/login.html')
         .expect(/<input type="text" name="username">/)
         .expect(/<input type="submit" value="Login">/)
         .expect('content-type', /html/)
@@ -53,39 +53,33 @@ describe('app', () => {
   });
 
   describe('post /login', () => {
-    it('should return with status code 400 and msg when username is not given', (done) => {
-      request(startApp({}, { sessions }))
+    it('should return with 400 when username is not given', (done) => {
+      request(startApp(config, { sessions }))
         .post('/login')
         .expect('Bad Request')
         .expect(400, done)
     });
 
-    it('should return with status code 302 & location "guest-book" when username is given', (done) => {
-      request(startApp({}, { sessions }))
-        .post('/login')
-        .send('username=lucky')
-        .expect(302, done)
-    });
-
-    it('should create session when session is not present for the given user',
+    it('should create session for new user and give guest-book',
       (done) => {
-        request(startApp({}, { sessions }))
+        request(startApp(config, { sessions }))
           .post('/login')
           .send('username=lucky')
-          .expect('set-cookie', /sessionId=/, done)
+          .expect('set-cookie', /sessionId=/)
+          .expect(302, done)
       });
   });
 
   describe('get /guest-book', () => {
-    it('should redirect to login page, when session/cookie is not present', (done) => {
-      request(startApp({}, { sessions }))
+    it('should open login page, when user session is not present', (done) => {
+      request(startApp(config, { sessions }))
         .get('/guest-book')
-        .expect('location', '/do-login.html')
+        .expect('location', '/login.html')
         .expect(302, done)
     });
 
     it('should open guest-book when user session is present', (done) => {
-      request(startApp({}, { sessions }))
+      request(startApp(config, { sessions }))
         .get('/guest-book')
         .set('Cookie', 'sessionId=123')
         .expect(/input type="button" value="Submit" onclick="guestBook/)
@@ -93,20 +87,29 @@ describe('app', () => {
     });
   });
 
+  describe('get /api/comments', () => {
+    it('should give comments', (done) => {
+      request(startApp(config, { sessions }))
+        .get('/api/comments')
+        .expect('content-type', /json/)
+        .expect(200, done)
+    });
+  });
+
   describe('post /add-guest', () => {
-    it('should add the comment when session is available', (done) => {
-      request(startApp({}, { sessions }))
+    it('should post the comment when session is available', (done) => {
+      request(startApp(config, { sessions }))
         .post('/add-guest')
         .set('Cookie', 'sessionId=123')
-        .send('comment=hello')
-        .expect(200, done)
-      // .end((err, res) => {
-      //   const expectedComment = { comment: 'hello', name: 'Abc' };
-      //   const firstGuest = guestBook.guests[0];
-      //   assert.deepStrictEqual(firstGuest.comment, expectedComment.comment);
-      //   assert.deepStrictEqual(firstGuest.name, expectedComment.name);
-      //   done();
-      // })
+        .send('comment=hey')
+        .expect(200)
+        .end(() => {
+          const expectedComment = { comment: 'hey', name: 'Abc' };
+          const firstGuest = guestBook.guests[0];
+          assert.deepStrictEqual(firstGuest.comment, expectedComment.comment);
+          assert.deepStrictEqual(firstGuest.name, expectedComment.name);
+          done();
+        })
     });
   });
 
@@ -118,8 +121,8 @@ describe('app', () => {
       }
     };
 
-    it('should redirect the user to home page when session is removed', (done) => {
-      request(startApp({}, { sessions }))
+    it('should expire cookie and remove session of current user', (done) => {
+      request(startApp(config, { sessions }))
         .post('/logout')
         .set('Cookie', 'sessionId=123')
         .expect(302, done)

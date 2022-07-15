@@ -1,11 +1,8 @@
 const injectSession = (sessions) => (req, res, next) => {
-  if (req.cookies) {
-    req.sessions = sessions;
-
-    const sessionId = req.cookies.sessionId;
-    if (sessionId) {
-      req.session = sessions[sessionId];
-    }
+  req.sessions = sessions;
+  const sessionId = req.cookies.sessionId;
+  if (sessionId) {
+    req.session = sessions[sessionId];
   }
   next();
 };
