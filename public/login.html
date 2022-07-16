@@ -2,18 +2,20 @@
 
 <head>
   <title>LOGIN</title>
+  <script src="js/login.js"></script>
 </head>
 
 <body>
   <h1>Login</h1>
-  <form action="/login" method="post">
-    <div>
+  <form id="login-form">
+    <div id="username">
       <label for="username">Username: </label>
       <input type="text" name="username">
     </div>
-    <div>
-      <input type="submit" value="Login">
+    <div id="login">
+      <input type="button" value="Login" onclick="login()">
     </div>
+    <p id="message"></p>
   </form>
 
 </body>

@@ -1,14 +1,16 @@
 const express = require('express');
 
-const { injectGuestBook, logRequest, comments, guestBookHandler, redirectLogin, injectSession, injectDate, logout } = require('./app/handlers/handlers.js');
-const { loginHandler } = require('./app/handlers/loginHandler.js');
-const { signupHandler } = require('./app/handlers/signupHandler.js');
-const { addGuest } = require('./app/handlers/guestsHandler.js');
-const { injectCookies } = require('./app/handlers/injectCookie.js');
+const handlers = require('./app/handlers.js');
+const { loginHandler } = require('./app/loginHandler.js');
+const { signupHandler } = require('./app/signupHandler.js');
+const { addGuest } = require('./app/guestsHandler.js');
+const { injectCookies } = require('./app/injectCookie.js');
+
+const { injectGuestBook, logRequest, comments, guestBookHandler, login, injectSession, injectDate, logout } = handlers;
 
 const createLoginRouter = () => {
   const loginRouter = express.Router();
-  loginRouter.get('/', redirectLogin);
+  loginRouter.get('/', login);
   loginRouter.post('/', loginHandler);
 
   return loginRouter;
@@ -25,7 +27,7 @@ const createGuestBookRouter = () => {
   return guestBookRouter;
 }
 
-const startApp = (config, { sessions }) => {
+const initApp = (config, { sessions }) => {
   const { log, FC_GUESTBOOK_SRC_PATH } = config;
   const app = express();
 
@@ -53,4 +55,4 @@ const startApp = (config, { sessions }) => {
   return app;
 };
 
-module.exports = { startApp };
+module.exports = { initApp };

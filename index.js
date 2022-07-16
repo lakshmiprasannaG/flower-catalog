@@ -1,5 +1,4 @@
-const { startApp } = require('./src/app.js');
-const { log } = require('console');
+const { initApp } = require('./src/app.js');
 
 const FC_PORT = 2345;
 const config = {
@@ -7,5 +6,5 @@ const config = {
   log: console.log
 };
 
-const app = startApp(config, { sessions: {} });
+const app = initApp(config, { sessions: {} });
 app.listen(FC_PORT, () => console.log('Connected to port ', FC_PORT));

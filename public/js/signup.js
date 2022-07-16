@@ -6,7 +6,6 @@ const xhrRequest = (action, { method, body }, onLoad) => {
 };
 
 const response = (xhr) => {
-  console.log(xhr.response);
   const messageElement = document.querySelector('#message');
   messageElement.innerText = xhr.response;
 };

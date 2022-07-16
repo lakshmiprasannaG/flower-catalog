@@ -36,7 +36,7 @@ const guestBookHandler = (req, res, next) => {
   createGuestBook(req, res, next);
 };
 
-const redirectLogin = (req, res, next) => {
+const login = (req, res, next) => {
   if (!req.session) {
     res.redirect('/login.html');
     return;
@@ -62,5 +62,5 @@ const logout = (req, res, next) => {
 };
 
 module.exports = {
-  injectGuestBook, injectDate, injectSession, logRequest, comments, guestBookHandler, redirectLogin, logout
+  injectGuestBook, injectDate, injectSession, logRequest, comments, guestBookHandler, login, logout
 };

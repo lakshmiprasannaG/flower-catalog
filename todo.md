@@ -1,9 +1,15 @@
 # TODO
 
+- [ ] Group handlers accordingly
 - [ ] Add authentication in login page
+- [ ] Remove guestBook entity
 
 # DONE
 
+- [x] Request /login from frontend
+- [x] Remove handlers directory
+- [x] Rename 'redirectLogin' to 'login'
+- [x] Rename 'startApp' to 'initApp'
 - [x] Add signup
 - [x] Inject a router for '/login'
 - [x] Inject a router for '/guest-book'
