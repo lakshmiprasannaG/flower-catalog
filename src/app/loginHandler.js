@@ -6,9 +6,8 @@ const createSession = (username, date) => {
   };
 };
 
-const loginHandler = (req, res, next) => {
+const loginHandler = (users) => (req, res, next) => {
   if (req.session) {
-    // res.redirect('/guest-book');
     res.end('successful');
     return;
   }
@@ -19,11 +18,15 @@ const loginHandler = (req, res, next) => {
     return;
   }
 
+  if (!users[username]) {
+    res.status(401).send('User does not exist!');
+    return;
+  }
+
   const newSession = createSession(username, req.rawDate);
   req.sessions[newSession.sessionId] = newSession;
 
   res.cookie('sessionId', newSession.sessionId);
-  // res.redirect('/guest-book');
   res.end('successful');
 };
 

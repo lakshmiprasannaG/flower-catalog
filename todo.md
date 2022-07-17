@@ -1,11 +1,12 @@
 # TODO
 
+- [ ] Test signup 
 - [ ] Group handlers accordingly
-- [ ] Add authentication in login page
 - [ ] Remove guestBook entity
 
 # DONE
 
+- [x] Add authentication in login page
 - [x] Request /login from frontend
 - [x] Remove handlers directory
 - [x] Rename 'redirectLogin' to 'login'

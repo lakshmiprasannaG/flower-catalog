@@ -18,11 +18,6 @@ const injectGuestBook = (guestBookSrcPath = './data/comments.json') => {
   };
 };
 
-const logRequest = (log) => (req, res, next) => {
-  log(req.method, req.url);
-  next();
-};
-
 const comments = (req, res, next) => {
   res.json(req.guestBook.guests);
   return;
@@ -62,5 +57,5 @@ const logout = (req, res, next) => {
 };
 
 module.exports = {
-  injectGuestBook, injectDate, injectSession, logRequest, comments, guestBookHandler, login, logout
+  injectGuestBook, injectDate, injectSession, comments, guestBookHandler, login, logout
 };

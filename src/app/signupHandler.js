@@ -1,15 +1,14 @@
 const fs = require('fs');
 
-const signupHandler = (req, res, next) => {
-  const users = JSON.parse(fs.readFileSync('data/users.json', 'utf8'));
+const signupHandler = (users) => (req, res, next) => {
   const currentUser = req.body;
 
-  if ((users.filter(user => user.username === currentUser.username).length > 0)) {
+  if (users[currentUser.username]) {
     res.end('Username not available');
     return;
   }
 
-  users.push(currentUser);
+  users[currentUser.username] = currentUser;
   fs.writeFileSync('data/users.json', JSON.stringify(users), 'utf8');
   res.end('Registration successful!');
 };

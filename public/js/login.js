@@ -6,7 +6,7 @@ const xhrRequest = (action, { method, body }, onLoad) => {
 };
 
 const response = (xhr) => {
-  if (xhr.status === 400) {
+  if (xhr.status === 400 || xhr.status === 401) {
     const messageElement = document.querySelector('#message');
     messageElement.innerText = xhr.response;
     return;
