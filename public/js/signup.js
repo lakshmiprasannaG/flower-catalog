@@ -7,12 +7,16 @@ const xhrRequest = (action, { method, body }, onLoad) => {
 
 const response = (xhr) => {
   const messageElement = document.querySelector('#message');
-  if (xhr.status === 400 || 409) {
-    messageElement.innerText = xhr.response;
-    return;
-  }
   if (xhr.status === 200) {
     messageElement.innerText = 'Registration successful!';
+    return;
+  }
+
+  console.log(xhr.status, 'status code');
+
+  if (xhr.status === 400 || xhr.status === 409) {
+    messageElement.innerText = xhr.response;
+    return;
   }
 };
 

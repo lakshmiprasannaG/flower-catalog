@@ -6,6 +6,7 @@
 
 # DONE
 
+- [x] Parse cookies using cookie-parser module
 - [x] Test signup 
 - [x] Add authentication in login page
 - [x] Request /login from frontend

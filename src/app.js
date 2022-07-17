@@ -1,6 +1,7 @@
 const fs = require('fs');
 const express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 const handlers = require('./app/handlers.js');
 const { loginHandler } = require('./app/loginHandler.js');
@@ -42,8 +43,8 @@ const initApp = (config, { sessions, users }) => {
     injectDate,
     morgan('tiny'),
     express.urlencoded({ extended: true }),
+    cookieParser(),
     injectGuestBook(FC_GUESTBOOK_SRC_PATH),
-    injectCookies,
     injectSession(sessions)
   ];
 
