@@ -7,7 +7,13 @@ const xhrRequest = (action, { method, body }, onLoad) => {
 
 const response = (xhr) => {
   const messageElement = document.querySelector('#message');
-  messageElement.innerText = xhr.response;
+  if (xhr.status === 400 || 409) {
+    messageElement.innerText = xhr.response;
+    return;
+  }
+  if (xhr.status === 200) {
+    messageElement.innerText = 'Registration successful!';
+  }
 };
 
 const signup = () => {

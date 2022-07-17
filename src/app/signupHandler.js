@@ -1,16 +1,21 @@
 const fs = require('fs');
 
 const signupHandler = (users) => (req, res, next) => {
-  const currentUser = req.body;
+  const { username } = req.body;
 
-  if (users[currentUser.username]) {
-    res.end('Username not available');
+  if (!username) {
+    res.status(400).send('Please enter your username!');
     return;
   }
 
-  users[currentUser.username] = currentUser;
+  if (users[username]) {
+    res.status(409).send('Username already exists!');
+    return;
+  }
+
+  users[username] = req.body;
   fs.writeFileSync('data/users.json', JSON.stringify(users), 'utf8');
-  res.end('Registration successful!');
+  res.json(users);
 };
 
 module.exports = { signupHandler };

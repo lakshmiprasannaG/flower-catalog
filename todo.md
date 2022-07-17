@@ -1,11 +1,12 @@
 # TODO
 
-- [ ] Test signup 
+- [ ] Handle cookies and sessions using cookie-session module
 - [ ] Group handlers accordingly
 - [ ] Remove guestBook entity
 
 # DONE
 
+- [x] Test signup 
 - [x] Add authentication in login page
 - [x] Request /login from frontend
 - [x] Remove handlers directory
